@@ -7,9 +7,23 @@ POST http://localhost:3000/users/
 Content-Type: application/json
 
 {
-  "username": "johndoe",
-  "name": "John Doe",
-  "password": "securepassword123",
-  "age": 30,
-  "number": "+1234567890"
+  "username": "shiva",
+  "name": "shiva ram palle",
+  "password": "9398448984",
+  "age": 25,
+  "number": "9398448984"
 }
+
+###
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "username": "shiva",
+  "password": "9398448984"
+}
+
+###
+GET http://localhost:3000/details/
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNoaXZhIiwiaWF0IjoxNzE2MTUwMTQ2fQ.Aj-U0H1GME5ddUQjVCOKu5OITraN71tNY8KUwOsWRFs
+

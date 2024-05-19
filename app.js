@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const bcrypt = require('bcrypt');
+const jwt=require("jsonwebtoken")
 
 
 const { open } = require("sqlite");
@@ -35,7 +36,7 @@ app.get("/", async (request,response)=> {
 
 app.post("/users/", async (request, response) => {
   const { username, name, password, age, number } = request.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(request.body.password, 10);
   const selectUserQuery = `SELECT * FROM user WHERE username = '${username}'`;
   const dbUser = await db.get(selectUserQuery);
   if (dbUser === undefined) {
@@ -69,10 +70,41 @@ app.post("/login", async (request, response) => {
   } else {
     const isPasswordMatched = await bcrypt.compare(password, dbUser.password);
     if (isPasswordMatched === true) {
-      response.send("Login Success!");
+      const payload={
+        username:username
+      }
+      const jwtToken = jwt.sign(payload, "MY_SECRET_TOKEN");
+      response.send(jwtToken)
     } else {
       response.status(400);
       response.send("Invalid Password");
     }
   }
 });
+
+// getting details api 
+
+app.get("/details/",async (request,response)=> {
+  let jwtToken
+  const authHeader=request.headers["authorization"]
+  if (authHeader!==undefined) {
+    jwtToken=authHeader.split(" ")[1]
+  }if (jwtToken === undefined) {
+    response.status(401);
+    response.send("Invalid Access Tokens");
+  } else {
+    jwt.verify(jwtToken,"MY_SECRET_TOKEN", async(error,payload)=> {
+      if (error) {
+        response.send("Invalid Access Token")
+      }else {
+        const getBooksQuery = `
+            SELECT
+              *
+            FROM
+             player`;
+        const booksArray = await db.all(getBooksQuery);
+        response.send(booksArray);
+      }
+    })
+  }
+})
