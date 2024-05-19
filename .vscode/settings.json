@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "shiva2",
+            "database": "${workspaceFolder:mycode}/mydb.db"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
